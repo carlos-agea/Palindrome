@@ -6,16 +6,19 @@ import java.util.*;
 public class Palindrome {
 
     /**
-     * Find 3 longest unique palindromes in a supplied string
+     * Find first N longest palindromes in a supplied string
      *
      * @param str string to look in
+     * @param n   number of results to find
      * @return set of results
      */
-    public static Set<String> firstThreeLongestPalindromes(String str) {
+    public static Set<String> firstNLongestPalindromes(String str, int n) {
+        if (str == null || n == 0) return Collections.emptySet();
+
         Set<String> results = new HashSet();
         for (int size = str.length(); size > 1; size--) {
-            findPalindromesOfSize(str, size, results);
-            if (results.size() >= 3) return results;
+            findPalindromesOfSize(str, size, results, n);
+            if (results.size() >= n) return results;
         }
         return results;
     }
@@ -24,15 +27,16 @@ public class Palindrome {
      * Find unique palindromes of determined sized in a supplied string
      *
      * @param str     string to look in
-     * @param size    palindrome size
+     * @param size    palindrome size to look for
      * @param results set of results
+     * @param n       number of results to find
      */
-    private static void findPalindromesOfSize(String str, int size, Set<String> results) {
+    private static void findPalindromesOfSize(String str, int size, Set<String> results, int n) {
         for (int pos = 0; (pos + size) <= str.length(); pos++) {
             if (!isContained(str.substring(pos, pos + size), results) && isPalindrome(str.substring(pos, pos + size))) {
                 results.add(str.substring(pos, pos + size));
                 System.out.println("Text: " + str.substring(pos, pos + size) + " , Index: " + pos + ", Length: " + size);
-                if (results.size() >= 3) return;
+                if (results.size() >= n) return;
             }
         }
     }
@@ -44,7 +48,7 @@ public class Palindrome {
      * @param set the set of strings to look in
      * @return
      */
-    private static boolean isContained(String str, Set<String> set) {
+    static boolean isContained(String str, Set<String> set) {
         for (String entry : set) {
             if (entry.contains(str)) return true;
         }
@@ -57,11 +61,11 @@ public class Palindrome {
      * @param str the string
      * @return
      */
-    private static boolean isPalindrome(String str) {
-        if (str.length() == 0 || str.length() == 1) return false;
+    public static boolean isPalindrome(String str) {
+        if (str == null || str.length() == 0 || str.length() == 1) return false;
 
         for (int i = 0; i < str.length() / 2; i++) {
-            if (str.charAt(i) != str.charAt(str.length() - 1 - i)) {
+            if (Character.toLowerCase(str.charAt(i)) != Character.toLowerCase(str.charAt(str.length() - 1 - i))) {
                 return false;
             }
         }
